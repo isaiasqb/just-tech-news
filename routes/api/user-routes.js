@@ -51,12 +51,40 @@ router.post('/', (req, res) => {
     });
 });
 
+// PUT /login -- ability to SING  in and VERIFY user's email andpassword --
+router.post('/login',(req, res) =>{
+  // expects {email: 'lernantino@gmail.com', password: 'password1234'}
+  User.findOne({
+    where:{
+      email: req.body.email
+    }
+  }).then(dbUserData => {
+    if(!dbUserData) {
+      res.status(400).json({message: 'No user with that ID was found'});
+      return
+    }
+   
+    //code to verify user using an instance form the User class: checkPassword()
+    const validPassword = dbUserData.checkPAssword(req.body.password)
+
+    // the variable now has received a true || false value
+    if(!validPassword){
+      res.status(400).json({message: 'Incorrect password'});
+      return;
+    }
+
+    res.json({user: dbUserData, message: "You are logged in"});
+  })
+});
+
+
 // PUT /api/users/1 -- ability to update, modify existing user data --
 router.put('/:id', (req, res) => {
   // expects {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
 
   // if req.body has exact key/value pairs to match the model, you can just use `req.body` instead
   User.update(req.body, {
+    individualHooks: true,
     where: {
       id: req.params.id
     }
