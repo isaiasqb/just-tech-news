@@ -30,7 +30,7 @@ Post.init(
     user_id: {
       type: DataTypes.INTEGER,
       references: { //Establish the relationship between this Post and the User 
-        model: 'user',
+        model: 'user',  //user in lowercase is defined in the metadata in User.init
         key: 'id'
       }
     }
