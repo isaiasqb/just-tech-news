@@ -1,12 +1,11 @@
 const router = require('express').Router();
-const { rest } = require('lodash');
 const { User } = require('../../models');
 
-// GET /api/users   -- gets all of the users packed in a json format --
+// GET /api/users   -- gets ALL of the users packed in a json format --
 router.get('/', (req, res) => {
   // Access our User model and run .findAll() method)
   User.findAll({
-    attributes: { exclude:['password']}
+    attributes: { exclude: ['password'] }
   })
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {
@@ -27,7 +26,6 @@ router.get('/:id', (req, res) => {
         model: Post,
         attributes: ['id', 'title', 'post_url', 'created_at']
       },
-      // include the Comment model here:
       {
         model: Comment,
         attributes: ['id', 'comment_text', 'created_at'],
@@ -45,8 +43,8 @@ router.get('/:id', (req, res) => {
     ]
   })
     .then(dbUserData => {
-      if (!dbUserData){
-        res.status(404).json({message: 'no user found with this id'});
+      if (!dbUserData) {
+        res.status(404).json({ message: 'No user found with this id' });
         return;
       }
       res.json(dbUserData);
@@ -56,6 +54,8 @@ router.get('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
+
+
 
 // POST /api/users --ability to CREATE a user --
 router.post('/', (req, res) => {
@@ -72,31 +72,30 @@ router.post('/', (req, res) => {
     });
 });
 
-// PUT /login -- ability to SING  in and VERIFY user's email andpassword --
-router.post('/login',(req, res) =>{
+
+router.post('/login', (req, res) => {
   // expects {email: 'lernantino@gmail.com', password: 'password1234'}
   User.findOne({
-    where:{
+    where: {
       email: req.body.email
     }
   }).then(dbUserData => {
-    if(!dbUserData) {
-      res.status(400).json({message: 'No user with that ID was found'});
-      return
+    if (!dbUserData) {
+      res.status(400).json({ message: 'No user with that email address!' });
+      return;
     }
-   
     //code to verify user using an instance form the User class: checkPassword()
-    const validPassword = dbUserData.checkPAssword(req.body.password)
-
+    const validPassword = dbUserData.checkPassword(req.body.password);
     // the variable now has received a true || false value
-    if(!validPassword){
-      res.status(400).json({message: 'Incorrect password'});
+    if (!validPassword) {
+      res.status(400).json({ message: 'Incorrect password!' });
       return;
     }
 
-    res.json({user: dbUserData, message: "You are logged in"});
-  })
+    res.json({ user: dbUserData, message: 'You are now logged in!' });
+  });
 });
+
 
 
 // PUT /api/users/1 -- ability to update, modify existing user data --
@@ -122,6 +121,7 @@ router.put('/:id', (req, res) => {
       res.status(500).json(err);
     });
 });
+
 
 // DELETE /api/users/1
 router.delete('/:id', (req, res) => {
