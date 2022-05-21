@@ -1,6 +1,5 @@
 // import the connection to MySQL we stored in the connection.js file
 const { Model, DataTypes } = require('sequelize');
-
 // import Model and Datatypes from the sequelize package.
 const sequelize = require('../config/connection')
 
