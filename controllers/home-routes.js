@@ -42,4 +42,10 @@ router.get('/', (req, res) => {
     })
 });
 
+
+// LOG in and SIGN in page route
+router.get('/login', (req, res) => {
+  res.render('login');
+});
+
 module.exports = router;
