@@ -1,15 +1,12 @@
-const { response } = require("express");
-
 //HANDLING REQUEST FOR LOG-IN
-async function loginFormHandler(event){
+async function loginFormHandler(event) {
   event.preventDefault();
-
   // grabbing the data from the form
   const email = document.querySelector('#email-login').value.trim();
   const password = document.querySelector('#password-login').value.trim();
 
-  if(email && password) {
-    const reponse = await fetch('/api/users/login', {
+  if (email && password) {
+    const response = await fetch('/api/users/login', {
       method: 'post',
       body: JSON.stringify({
         email,
@@ -19,12 +16,12 @@ async function loginFormHandler(event){
     });
     //error handling & checking reponse status
     if (response.ok) {
-      document.location.replace('/'); //redirect to homepage if log in is valid
+      document.location.replace('/');
     } else {
       alert(response.statusText);
     }
   }
-};
+}
 
 
 
@@ -50,8 +47,8 @@ async function signupFormHandler(event) {
       headers: { 'Content-Type': 'application/json' } 
     });
     //error handling & checking reponse status
-    if (response.ok){
-      console.log('success');
+    if (response.ok) {
+      document.location.replace('/');
     } else {
       alert(response.statusText);
     }
@@ -59,4 +56,7 @@ async function signupFormHandler(event) {
 }
 
 // listener for the submit event in the log in page
+
+document.querySelector('.login-form').addEventListener('submit', loginFormHandler);
+
 document.querySelector('.signup-form').addEventListener('submit', signupFormHandler);

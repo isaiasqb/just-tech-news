@@ -3,10 +3,11 @@ such as the homepage and login page.*/
 const router = require('express').Router();
 // IMPORT the api/post-routes.js file
 const sequelize = require('../config/connection');
-const { Post, User, Comment} = require('../models');
+const { Post, User, Comment, Vote} = require('../models');
 
-
+// HOMEpage route
 router.get('/', (req, res) => {
+  console.log(req.session);
   Post.findAll({
     attributes: [
       'id',
@@ -31,7 +32,6 @@ router.get('/', (req, res) => {
     ]
   })
     .then(dbPostData => {
-      console.log(dbPostData[0]);
       const posts = dbPostData.map(post => post.get({ plain:true }));
       //pass a single post object into the homepage template
       res.render('homepage', { posts });
@@ -45,6 +45,12 @@ router.get('/', (req, res) => {
 
 // LOG in and SIGN in page route
 router.get('/login', (req, res) => {
+  // check for a session and redirect to the homepage if one exists
+  if (req.session.loggedIn) {
+    res.redirect('/');
+    return
+  }
+
   res.render('login');
 });
 
